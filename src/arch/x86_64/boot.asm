@@ -1,4 +1,5 @@
 global start
+extern long_mode_start
 
 section .text
 bits 32
@@ -7,6 +8,10 @@ start:
 
     call initialize_page_tables
     call enable_paging
+
+    lgdt [gdt64.pointer]
+
+    jmp gdt64.code:long_mode_start
 
     mov dword [0xb8000], 0x2f4b2f4f
     hlt
@@ -74,3 +79,12 @@ p2_table: ; Page-Directory Table
 stack_bottom:
     resb 64
 stack_top:
+
+section .rodata
+gdt64:
+    dq 0
+.code: equ $ - gdt64
+    dq (1 << 43) | (1 << 44) | (1 << 47) | (1 << 53)
+.pointer:
+    dw $ - gdt64 - 1
+    dq gdt64
