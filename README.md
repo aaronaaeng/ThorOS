@@ -1,2 +1,2 @@
 # ThorOS
-A rust-based operating system.
+A Rust-based operating system.
