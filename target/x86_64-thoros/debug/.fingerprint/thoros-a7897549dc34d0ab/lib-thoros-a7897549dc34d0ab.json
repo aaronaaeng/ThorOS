@@ -1,0 +1,1 @@
+{"rustc":16691645817143570650,"features":"[]","target":9287456323564148028,"profile":731176819336294830,"deps":[["rlibc v1.0.0",13739743654162772278]],"local":[{"MtimeBased":[[1509396268,202654577],"/home/thor/Git/ThorOS/target/x86_64-thoros/debug/.fingerprint/thoros-a7897549dc34d0ab/dep-lib-thoros-a7897549dc34d0ab"]}],"rustflags":["--sysroot","/home/thor/.xargo"]}

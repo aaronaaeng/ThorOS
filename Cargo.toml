@@ -1,0 +1,10 @@
+[package]
+name = "thoros"
+version = "0.2.0"
+authors = ["Aaron Aaeng"]
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+rlibc = "1.0"
