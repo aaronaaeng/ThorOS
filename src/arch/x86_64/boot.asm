@@ -56,7 +56,6 @@ enable_paging:
 
     ret
 
-
 error:
     mov dword [0xb8000], 0x4f524f45
     mov dword [0xb8004], 0x4f3a4f52
