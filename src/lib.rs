@@ -10,13 +10,16 @@ extern crate spin;
 extern crate multiboot2;
 
 #[macro_use]
+extern crate bitflags;
+
+#[macro_use]
 mod vga_buffer;
 mod memory;
 
 #[no_mangle]
 pub extern fn rust_main(multiboot_information_address: usize) {
     use memory::FrameAllocator;
-    
+
     vga_buffer::clear_screen();
 
     let boot_info = unsafe{ multiboot2::load(multiboot_information_address) };

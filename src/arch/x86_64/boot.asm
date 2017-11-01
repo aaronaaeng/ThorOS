@@ -19,6 +19,10 @@ start:
 
 
 initialize_page_tables:
+    mov eax, p4_table
+    or eax, 0b11
+    mov [p4_table + 511 * 8], eax
+
     ; mapping first p4 entry to the p3 table
     mov eax, p3_table
     or eax, 0b11
