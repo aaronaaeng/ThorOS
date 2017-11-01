@@ -12,16 +12,6 @@ pub static WRITER: Mutex<Writer> = Mutex::new(Writer {
     buffer: unsafe { Unique::new_unchecked(0xb8000 as *mut _) },
 });
 
-macro_rules! println {
-    ($fmt:expr) => (print!(concat!($fmt, "\n")));
-    ($fmt:expr, $(arg:tt)*) => (print!(concat!($fmt, "\n"), $($arg)*));
-}
-
-macro_rules! print {
-    ($($arg:tt)*) => ({
-        $crate::vga_buffer::print(format_args!($($arg)*))
-    });
-}
 
 #[derive(Debug, Clone, Copy)]
 #[allow(dead_code)]
@@ -138,13 +128,25 @@ impl fmt::Write for Writer {
     }
 }
 
-pub fn clear_screen() {
-    for _ in 0..BUFFER_HEIGHT {
-        println!("");
-    }
+
+macro_rules! print {
+    ($($arg:tt)*) => ({
+        $crate::vga_buffer::print(format_args!($($arg)*));
+    });
+}
+
+macro_rules! println {
+    ($fmt:expr) => (print!(concat!($fmt, "\n")));
+    ($fmt:expr, $($arg:tt)*) => (print!(concat!($fmt, "\n"), $($arg)*));
 }
 
 pub fn print(args: fmt::Arguments) {
     use core::fmt::Write;
     WRITER.lock().write_fmt(args).unwrap();
+}
+
+pub fn clear_screen() {
+    for _ in 0..BUFFER_HEIGHT {
+        println!("");
+    }
 }

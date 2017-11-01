@@ -5,6 +5,7 @@ section .text
 bits 32
 start:
     mov esp, stack_top ; Initialize stack pointer
+    mov edi, ebx ; Store multiboot info pointer in edi
 
     call initialize_page_tables
     call enable_paging
@@ -65,7 +66,7 @@ error:
     mov dword [0xb8000], 0x4f524f45
     mov dword [0xb8004], 0x4f3a4f52
     mov dword [0xb8008], 0x4f204f20
-    mov byte [0xb800a], aL
+    mov byte [0xb800a], al
     hlt
 
 section .bss
@@ -77,7 +78,7 @@ p3_table: ; Page-Directory Pointer Table
 p2_table: ; Page-Directory Table
     resb 4096
 stack_bottom:
-    resb 64
+    resb 4086 * 4
 stack_top:
 
 section .rodata
