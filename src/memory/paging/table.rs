@@ -2,15 +2,10 @@ use memory::paging::entry::*;
 use memory::paging::ENTRY_COUNT;
 use core::ops::{Index, IndexMut};
 use core::marker::PhantomData;
+use memory::FrameAllocator;
 use memory::PAGE_SIZE;
 
-pub const P$: *mut Table = 0xffffffff_fffff000 as *mut _;
-
-pub struct Table<L: TableLevel {
-    entries: [Entry; ENTRY_COUNT],
-    level: PhantomData<L>,
-}
-
+pub const P4: *mut Table<Level4> = 0xffffffff_fffff000 as *mut _;
 
 impl<L> Table<L> where L: TableLevel {
     pub fn zero(&mut self) {
@@ -53,7 +48,7 @@ impl<L> Table<L> where L: HierarchicalLevel {
         }
 }
 
-impl <L>Index<usize> for Table {
+impl<L> Index<usize> for Table<L> where L: TableLevel {
     type Output = Entry;
 
     fn index(&self, index: usize) -> &Entry {
@@ -61,9 +56,9 @@ impl <L>Index<usize> for Table {
     }
 }
 
-impl IndexMut<usize> for Table {
+impl<L> IndexMut<usize> for Table<L> where L: TableLevel {
     fn index_mut(&mut self, index: usize) -> &mut Entry {
-        *&mut self.entries[index]
+        &mut self.entries[index]
     }
 }
 
@@ -79,25 +74,23 @@ impl TableLevel for Level3 {}
 impl TableLevel for Level2 {}
 impl TableLevel for Level1 {}
 
-pub trait HierarchicalLevel: TableLevel {}
-
-impl HierarchicalLevel for Level4 {}
-impl HierarchicalLevel for Level3 {}
-impl HierarchicalLevel for Level2 {}
-
 pub struct Table<L: TableLevel> {
     entries: [Entry; ENTRY_COUNT],
     level: PhantomData<L>,
 }
 
-impl HierarchicalLevel for level4 {
+pub trait HierarchicalLevel: TableLevel {
+    type NextLevel: TableLevel;
+}
+
+impl HierarchicalLevel for Level4 {
     type NextLevel = Level3;
 }
 
-impl HierarchicalLevel for level3 {
+impl HierarchicalLevel for Level3 {
     type NextLevel = Level2;
 }
 
-impl HierarchicalLevel for level2 {
+impl HierarchicalLevel for Level2 {
     type NextLevel = Level1;
 }
